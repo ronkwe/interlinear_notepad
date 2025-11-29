@@ -4,6 +4,7 @@ import (
 	"context"
 	"glossa/core"
 	"glossa/export"
+	"glossa/importer"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"os"
 )
@@ -97,21 +98,40 @@ func (a *App) SaveMarkdownFile(doc *core.GlossDocument) (string, error) {
 // SavePDFFile saves the document as a PDF file.
 func (a *App) SavePDFFile(doc *core.GlossDocument) (string, error) {
 	path, err := runtime.SaveFileDialog(a.ctx, runtime.SaveDialogOptions{
-		Title: "Save PDF File",
-		DefaultFilename: "Untitled.pdf",
-		Filters: []runtime.FileFilter{{DisplayName: "PDF Files (*.pdf)", Pattern: "*.pdf"}},
+		Title: "Export PDF",
+		Filters: []runtime.FileFilter{
+			{DisplayName: "PDF Files (*.pdf)", Pattern: "*.pdf"},
+		},
 	})
-	if err != nil {
+
+	if err != nil || path == "" {
 		return "", err
 	}
-	if path == "" {
-		return "", nil // User cancelled
-	}
 
-	pdf, err := export.ToPDF(doc)
+	err = export.ToPDF(doc, path)
 	if err != nil {
 		return "", err
 	}
 
-	return path, pdf.OutputFileAndClose(path)
+	return path, nil
+}
+
+func (a *App) OpenMarkdownFile() (*core.GlossDocument, error) {
+	path, err := runtime.OpenFileDialog(a.ctx, runtime.OpenDialogOptions{
+		Title: "Open Markdown File",
+		Filters: []runtime.FileFilter{
+			{DisplayName: "Markdown Files (*.md)", Pattern: "*.md"},
+		},
+	})
+
+	if err != nil || path == "" {
+		return nil, err
+	}
+
+	content, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+
+	return importer.FromMarkdown(string(content))
 }

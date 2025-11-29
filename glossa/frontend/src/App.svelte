@@ -1,4 +1,5 @@
 <script>
+  import MenuBar from "./components/MenuBar.svelte";
   import Toolbar from "./components/Toolbar.svelte";
   import GlossBlockEditor from "./components/GlossBlockEditor.svelte";
   import { documentStore } from "./stores.js";
@@ -16,27 +17,39 @@
 </script>
 
 <main>
-  <h1>Glossa</h1>
-  <Toolbar />
+  <MenuBar />
+  <div class="app-content">
+    <h1>Glossa</h1>
+    <Toolbar />
 
-  <div class="blocks-container">
-    {#each $documentStore.blocks as block, i}
-      <GlossBlockEditor
-        bind:block={$documentStore.blocks[i]}
-        on:delete={() => deleteBlock(i)}
-      />
-    {/each}
+    <div class="blocks-container">
+      {#each $documentStore.blocks as block, i}
+        <GlossBlockEditor
+          bind:block={$documentStore.blocks[i]}
+          on:delete={() => deleteBlock(i)}
+        />
+      {/each}
+    </div>
+
+    <button class="add-block-btn" on:click={addBlock}>+ Add Block</button>
   </div>
-
-  <button class="add-block-btn" on:click={addBlock}>+ Add Block</button>
 </main>
 
 <style>
   main {
     text-align: left;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .app-content {
     padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .blocks-container {

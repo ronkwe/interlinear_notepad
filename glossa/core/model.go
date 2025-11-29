@@ -9,8 +9,14 @@ type GlossDocument struct {
 
 // DocConfig holds settings for the document, like the number of lines and their labels.
 type DocConfig struct {
-	LineCount int      `json:"line_count"`
-	LineLabels []string `json:"line_labels"` // e.g., ["Source", "Morphemes", "Gloss", "Translation"]
+	LineCount   int          `json:"line_count"`
+	LineOptions []LineOption `json:"line_options"`
+	ShowLabels  bool         `json:"show_labels"`
+}
+
+type LineOption struct {
+	Label   string `json:"label"`
+	Visible bool   `json:"visible"`
 }
 
 // GlossBlock represents a single "paragraph" of interlinear text.

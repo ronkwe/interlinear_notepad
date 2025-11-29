@@ -1,65 +1,5 @@
 <script>
-  import {
-    OpenFile,
-    SaveFile,
-    ExportToMarkdown,
-    ExportToPDF,
-    SaveMarkdownFile,
-    SavePDFFile,
-  } from "../../wailsjs/go/main/App";
   import { documentStore } from "../stores.js";
-
-  async function openFile() {
-    try {
-      const result = await OpenFile();
-      if (result) {
-        $documentStore = result;
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Error opening file: " + err);
-    }
-  }
-
-  async function saveFile() {
-    try {
-      const path = await SaveFile($documentStore);
-      if (path) {
-        alert("File saved successfully to: " + path);
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Error saving file: " + err);
-    }
-  }
-
-  async function exportMarkdown() {
-    try {
-      const path = await SaveMarkdownFile($documentStore);
-      if (path) {
-        alert("Markdown saved successfully to: " + path);
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Error exporting to Markdown: " + err);
-    }
-  }
-
-  async function exportPDF() {
-    try {
-      const path = await SavePDFFile($documentStore);
-      if (path) {
-        alert("PDF saved successfully to: " + path);
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Error exporting to PDF: " + err);
-    }
-  }
-
-  function toggleLabels() {
-    $documentStore.config.show_labels = !$documentStore.config.show_labels;
-  }
 
   function addLine() {
     $documentStore.config.line_count++;
@@ -77,14 +17,7 @@
 </script>
 
 <div class="toolbar">
-  <button on:click={openFile}>Open</button>
-  <button on:click={saveFile}>Save</button>
-  <button on:click={exportMarkdown}>Export Markdown</button>
-  <button on:click={exportPDF}>Export PDF</button>
   <div class="toolbar-group">
-    <button on:click={toggleLabels}>
-      {$documentStore.config.show_labels ? "Hide Labels" : "Show Labels"}
-    </button>
     <button on:click={addLine}>+ Line</button>
   </div>
 </div>

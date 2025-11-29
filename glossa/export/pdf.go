@@ -5,7 +5,7 @@ import (
 	"github.com/go-pdf/fpdf"
 )
 
-func ToPDF(doc *core.GlossDocument) (*fpdf.Fpdf, error) {
+func ToPDF(doc *core.GlossDocument, path string) error {
 	pdf := fpdf.New("P", "mm", "A4", "")
 	pdf.AddPage()
 	pdf.SetFont("Arial", "", 12)
@@ -104,5 +104,5 @@ func ToPDF(doc *core.GlossDocument) (*fpdf.Fpdf, error) {
 		pdf.Ln(lineHeight)
 	}
 
-	return pdf, nil
+	return pdf.OutputFileAndClose(path)
 }

@@ -14,6 +14,10 @@ export function OpenFile() {
   return window['go']['main']['App']['OpenFile']();
 }
 
+export function OpenMarkdownFile() {
+  return window['go']['main']['App']['OpenMarkdownFile']();
+}
+
 export function SaveFile(arg1) {
   return window['go']['main']['App']['SaveFile'](arg1);
 }

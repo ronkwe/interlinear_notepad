@@ -8,6 +8,8 @@ export function ExportToPDF():Promise<void>;
 
 export function OpenFile():Promise<core.GlossDocument>;
 
+export function OpenMarkdownFile():Promise<core.GlossDocument>;
+
 export function SaveFile(arg1:core.GlossDocument):Promise<string>;
 
 export function SaveMarkdownFile(arg1:core.GlossDocument):Promise<string>;
