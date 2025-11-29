@@ -17,3 +17,11 @@ export function OpenFile() {
 export function SaveFile(arg1) {
   return window['go']['main']['App']['SaveFile'](arg1);
 }
+
+export function SaveMarkdownFile(arg1) {
+  return window['go']['main']['App']['SaveMarkdownFile'](arg1);
+}
+
+export function SavePDFFile(arg1) {
+  return window['go']['main']['App']['SavePDFFile'](arg1);
+}

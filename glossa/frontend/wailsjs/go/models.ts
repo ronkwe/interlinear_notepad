@@ -1,13 +1,13 @@
 export namespace core {
-
+	
 	export class DocConfig {
 	    line_count: number;
 	    line_labels: string[];
-
+	
 	    static createFrom(source: any = {}) {
 	        return new DocConfig(source);
 	    }
-
+	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.line_count = source["line_count"];
@@ -16,11 +16,11 @@ export namespace core {
 	}
 	export class GlossColumn {
 	    lines: string[];
-
+	
 	    static createFrom(source: any = {}) {
 	        return new GlossColumn(source);
 	    }
-
+	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.lines = source["lines"];
@@ -28,16 +28,16 @@ export namespace core {
 	}
 	export class GlossBlock {
 	    columns: GlossColumn[];
-
+	
 	    static createFrom(source: any = {}) {
 	        return new GlossBlock(source);
 	    }
-
+	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.columns = this.convertValues(source["columns"], GlossColumn);
 	    }
-
+	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {
 		    if (!a) {
 		        return a;
@@ -56,23 +56,23 @@ export namespace core {
 		    return a;
 		}
 	}
-
+	
 	export class GlossDocument {
 	    version: string;
 	    config: DocConfig;
 	    blocks: GlossBlock[];
-
+	
 	    static createFrom(source: any = {}) {
 	        return new GlossDocument(source);
 	    }
-
+	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.version = source["version"];
 	        this.config = this.convertValues(source["config"], DocConfig);
 	        this.blocks = this.convertValues(source["blocks"], GlossBlock);
 	    }
-
+	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {
 		    if (!a) {
 		        return a;
@@ -93,3 +93,4 @@ export namespace core {
 	}
 
 }
+

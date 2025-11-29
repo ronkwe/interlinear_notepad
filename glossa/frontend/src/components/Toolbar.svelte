@@ -1,53 +1,78 @@
 <script>
-  import { OpenFile, SaveFile, ExportToMarkdown, ExportToPDF } from '../../wailsjs/go/main/App'
-
-  let doc = {} // This would be the main document state
+  import {
+    OpenFile,
+    SaveFile,
+    ExportToMarkdown,
+    ExportToPDF,
+    SaveMarkdownFile,
+    SavePDFFile,
+  } from "../../wailsjs/go/main/App";
+  import { documentStore } from "../stores.js";
 
   async function openFile() {
     try {
-      const result = await OpenFile()
+      const result = await OpenFile();
       if (result) {
-        doc = result
-        // TODO: Update the app's main document state
-        alert('File opened successfully!')
+        $documentStore = result;
       }
     } catch (err) {
-      console.error(err)
-      alert('Error opening file: ' + err)
+      console.error(err);
+      alert("Error opening file: " + err);
     }
   }
 
   async function saveFile() {
     try {
-      const path = await SaveFile(doc)
+      const path = await SaveFile($documentStore);
       if (path) {
-        alert('File saved successfully to: ' + path)
+        alert("File saved successfully to: " + path);
       }
     } catch (err) {
-      console.error(err)
-      alert('Error saving file: ' + err)
+      console.error(err);
+      alert("Error saving file: " + err);
     }
   }
 
   async function exportMarkdown() {
     try {
-      const markdown = await ExportToMarkdown(doc)
-      // This would typically be saved to a file, but for now we'll just show it
-      console.log(markdown)
-      alert('Markdown export successful! Check the console.')
+      const path = await SaveMarkdownFile($documentStore);
+      if (path) {
+        alert("Markdown saved successfully to: " + path);
+      }
     } catch (err) {
-      console.error(err)
-      alert('Error exporting to Markdown: ' + err)
+      console.error(err);
+      alert("Error exporting to Markdown: " + err);
     }
   }
 
-  function exportPDF() {
+  async function exportPDF() {
     try {
-      ExportToPDF()
+      const path = await SavePDFFile($documentStore);
+      if (path) {
+        alert("PDF saved successfully to: " + path);
+      }
     } catch (err) {
-      console.error(err)
-      alert('Error exporting to PDF: ' + err)
+      console.error(err);
+      alert("Error exporting to PDF: " + err);
     }
+  }
+
+  function toggleLabels() {
+    $documentStore.config.show_labels = !$documentStore.config.show_labels;
+  }
+
+  function addLine() {
+    $documentStore.config.line_count++;
+    $documentStore.config.line_options.push({
+      label: "New Line",
+      visible: true,
+    });
+    $documentStore.blocks.forEach((block) => {
+      block.columns.forEach((col) => {
+        col.lines.push("");
+      });
+    });
+    $documentStore = $documentStore; // Trigger update
   }
 </script>
 
@@ -56,6 +81,12 @@
   <button on:click={saveFile}>Save</button>
   <button on:click={exportMarkdown}>Export Markdown</button>
   <button on:click={exportPDF}>Export PDF</button>
+  <div class="toolbar-group">
+    <button on:click={toggleLabels}>
+      {$documentStore.config.show_labels ? "Hide Labels" : "Show Labels"}
+    </button>
+    <button on:click={addLine}>+ Line</button>
+  </div>
 </div>
 
 <style>
@@ -67,15 +98,18 @@
   button {
     padding: 8px 12px;
     border-radius: 6px;
-    border: 1px solid transparent;
+    border: 1px solid var(--border);
     font-weight: 500;
     font-family: inherit;
-    background-color: #1a1a1a;
+    background-color: var(--bg-panel);
+    color: var(--text-main);
     cursor: pointer;
-    transition: border-color 0.25s;
+    transition: all 0.25s;
   }
   button:hover {
-    border-color: #a855f7;
+    border-color: var(--primary);
+    color: var(--primary);
+    background-color: var(--bg-input);
   }
   button:focus,
   button:focus-visible {
