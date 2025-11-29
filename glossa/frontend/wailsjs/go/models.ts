@@ -49,6 +49,7 @@ export namespace core {
 		}
 	}
 	export class GlossColumn {
+	    id: string;
 	    lines: string[];
 	
 	    static createFrom(source: any = {}) {
@@ -57,6 +58,7 @@ export namespace core {
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
 	        this.lines = source["lines"];
 	    }
 	}

@@ -6,7 +6,12 @@
 
   function addBlock() {
     const newBlock = {
-      columns: [{ lines: Array($documentStore.config.line_count).fill("") }],
+      columns: [
+        {
+          id: crypto.randomUUID(),
+          lines: Array($documentStore.config.line_count).fill(""),
+        },
+      ],
     };
     $documentStore.blocks = [...$documentStore.blocks, newBlock];
   }

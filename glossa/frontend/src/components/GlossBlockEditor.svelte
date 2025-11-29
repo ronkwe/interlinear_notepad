@@ -26,8 +26,13 @@
     }
   }
 
-  function addColumn(index) {
+  function generateUUID() {
+    return crypto.randomUUID();
+  }
+
+  function insertColumnAfter(index) {
     const newColumn = {
+      id: generateUUID(),
       lines: Array($documentStore.config.line_count).fill(""),
     };
     block.columns.splice(index + 1, 0, newColumn);
@@ -88,7 +93,7 @@
   {/if}
 
   <div class="gloss-block">
-    {#each block.columns as column, i}
+    {#each block.columns as column, i (column.id)}
       <div class="gloss-column">
         {#each column.lines as line, j}
           {#if $documentStore.config.line_options[j] && $documentStore.config.line_options[j].visible}
@@ -135,6 +140,12 @@
     gap: 5px;
     height: 32px; /* Fixed height to match gloss-cell (approx 1.5em + padding + border) */
     /* gloss-cell: min-height 1.5em (~24px) + 8px padding + 2px border = ~34px. Let's be explicit. */
+  }
+
+  .gloss-block {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto; /* Allow horizontal scrolling if needed */
   }
 
   .gloss-column {

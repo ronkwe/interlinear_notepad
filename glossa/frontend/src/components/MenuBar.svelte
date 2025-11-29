@@ -34,6 +34,7 @@
                 {
                     columns: [
                         {
+                            id: crypto.randomUUID(),
                             lines: Array($documentStore.config.line_count).fill(
                                 "",
                             ),

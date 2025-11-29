@@ -2,6 +2,8 @@ package importer
 
 import (
 	"bufio"
+	"crypto/rand"
+	"fmt"
 	"glossa/core"
 	"strings"
 )
@@ -121,6 +123,7 @@ func processTable(doc *core.GlossDocument, block *core.GlossBlock, rows [][]stri
 	// Initialize columns
 	block.Columns = make([]core.GlossColumn, maxCols)
 	for i := range block.Columns {
+		block.Columns[i].ID = generateID()
 		block.Columns[i].Lines = make([]string, doc.Config.LineCount)
 	}
 
@@ -138,4 +141,14 @@ func processTable(doc *core.GlossDocument, block *core.GlossBlock, rows [][]stri
 			}
 		}
 	}
+}
+
+func generateID() string {
+	// Simple random ID generation
+	b := make([]byte, 16)
+	_, err := rand.Read(b)
+	if err != nil {
+		return "error-id"
+	}
+	return fmt.Sprintf("%x-%x-%x-%x-%x", b[0:4], b[4:6], b[6:8], b[8:10], b[10:])
 }

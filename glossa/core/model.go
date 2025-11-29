@@ -28,5 +28,6 @@ type GlossBlock struct {
 // GlossColumn holds the text for the different lines of a single, vertically-aligned unit.
 // The length of the `Lines` slice is dictated by the `DocConfig.LineCount`.
 type GlossColumn struct {
+	ID    string   `json:"id"`    // Unique identifier for the column
 	Lines []string `json:"lines"` // e.g., Lines[0] is source, Lines[1] is morpheme, etc.
 }

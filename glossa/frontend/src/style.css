@@ -2,8 +2,15 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+}
 
-  /* Linguist's Slate Theme */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
   --bg-app: #1e1e2e;
   --bg-panel: #252535;
   --bg-input: #181825;
