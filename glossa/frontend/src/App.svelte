@@ -1,6 +1,6 @@
 <script>
   import MenuBar from "./components/MenuBar.svelte";
-  import Toolbar from "./components/Toolbar.svelte";
+  import Legend from "./components/Legend.svelte";
   import GlossBlockEditor from "./components/GlossBlockEditor.svelte";
   import { documentStore } from "./stores.js";
 
@@ -25,7 +25,7 @@
   <MenuBar />
   <div class="app-content">
     <h1>Glossa</h1>
-    <Toolbar />
+    <Legend />
 
     <div class="blocks-container">
       {#each $documentStore.blocks as block, i}

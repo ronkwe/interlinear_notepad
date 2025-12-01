@@ -2,11 +2,12 @@ package export
 
 import (
 	"glossa/core"
+
 	"github.com/go-pdf/fpdf"
 )
 
 func ToPDF(doc *core.GlossDocument, path string) error {
-	pdf := fpdf.New("P", "mm", "A4", "")
+	pdf := fpdf.New("P", "mm", "Letter", "")
 	pdf.AddPage()
 	pdf.SetFont("Arial", "", 12)
 
@@ -14,6 +15,8 @@ func ToPDF(doc *core.GlossDocument, path string) error {
 	pageWidth, _ := pdf.GetPageSize()
 	leftMargin, _, rightMargin, _ := pdf.GetMargins()
 	printableWidth := pageWidth - leftMargin - rightMargin
+	labelColWidth := 30.0
+	printableWidth -= labelColWidth
 
 	for _, block := range doc.Blocks {
 		// Calculate column widths
@@ -63,23 +66,39 @@ func ToPDF(doc *core.GlossDocument, path string) error {
 			// Render these columns
 			// We need to render line by line.
 			// doc.Config.LineCount tells us how many lines per column.
-			
+
 			// Save Y position (not used for now)
 			// startY := pdf.GetY()
-			
+
 			for lineIdx := 0; lineIdx < doc.Config.LineCount; lineIdx++ {
 				pdf.SetX(currentX)
+
+				// Render Label Cell
+				labelText := ""
+				if lineIdx < len(doc.Config.LineOptions) {
+					opt := doc.Config.LineOptions[lineIdx]
+					if opt.Visible {
+						labelText = opt.Label
+						if startIndex > 0 && len(labelText) > 3 {
+							labelText = labelText[:3]
+						}
+					}
+				}
+				pdf.SetFont("Arial", "", 10) // Smaller font for labels
+				pdf.CellFormat(labelColWidth, lineHeight, labelText, "", 0, "R", false, 0, "")
+
+				// Render Columns
 				for i := startIndex; i < endIndex; i++ {
 					col := block.Columns[i]
 					text := ""
 					if lineIdx < len(col.Lines) {
 						text = col.Lines[lineIdx]
 					}
-					
+
 					// Set style based on line index (optional)
 					if lineIdx == 0 {
 						pdf.SetFont("Arial", "B", 12)
-					} else if lineIdx == doc.Config.LineCount - 1 {
+					} else if lineIdx == doc.Config.LineCount-1 {
 						pdf.SetFont("Arial", "I", 12)
 					} else {
 						pdf.SetFont("Arial", "", 12)
@@ -89,18 +108,18 @@ func ToPDF(doc *core.GlossDocument, path string) error {
 				}
 				pdf.Ln(lineHeight)
 			}
-			
+
 			// Add some spacing after the block part
 			pdf.Ln(lineHeight / 2)
-			
+
 			startIndex = endIndex
-			
+
 			// Check for page break
 			if pdf.GetY() > 270 {
 				pdf.AddPage()
 			}
 		}
-		
+
 		pdf.Ln(lineHeight)
 	}
 
