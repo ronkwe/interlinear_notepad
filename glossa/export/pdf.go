@@ -8,8 +8,12 @@ import (
 
 func ToPDF(doc *core.GlossDocument, path string) error {
 	pdf := fpdf.New("P", "mm", "Letter", "")
+	pdf.SetFontLocation("assets/fonts")
+	pdf.AddUTF8Font("DejaVu", "", "DejaVuSans.ttf")
+	pdf.AddUTF8Font("DejaVu", "B", "DejaVuSans-Bold.ttf")
+	pdf.AddUTF8Font("DejaVu", "I", "DejaVuSans-Oblique.ttf")
 	pdf.AddPage()
-	pdf.SetFont("Arial", "", 12)
+	pdf.SetFont("DejaVu", "", 12)
 
 	lineHeight := 6.0
 	pageWidth, _ := pdf.GetPageSize()
@@ -23,7 +27,16 @@ func ToPDF(doc *core.GlossDocument, path string) error {
 		var colWidths []float64
 		for _, col := range block.Columns {
 			maxWidth := 0.0
-			for _, line := range col.Lines {
+			for lineIdx, line := range col.Lines {
+				// Set style based on line index to get accurate width
+				if lineIdx == 0 {
+					pdf.SetFont("DejaVu", "B", 12)
+				} else if lineIdx == doc.Config.LineCount-1 {
+					pdf.SetFont("DejaVu", "I", 12)
+				} else {
+					pdf.SetFont("DejaVu", "", 12)
+				}
+
 				w := pdf.GetStringWidth(line)
 				if w > maxWidth {
 					maxWidth = w
@@ -84,7 +97,7 @@ func ToPDF(doc *core.GlossDocument, path string) error {
 						}
 					}
 				}
-				pdf.SetFont("Arial", "", 10) // Smaller font for labels
+				pdf.SetFont("DejaVu", "", 10) // Smaller font for labels
 				pdf.CellFormat(labelColWidth, lineHeight, labelText, "", 0, "R", false, 0, "")
 
 				// Render Columns
@@ -97,11 +110,11 @@ func ToPDF(doc *core.GlossDocument, path string) error {
 
 					// Set style based on line index (optional)
 					if lineIdx == 0 {
-						pdf.SetFont("Arial", "B", 12)
+						pdf.SetFont("DejaVu", "B", 12)
 					} else if lineIdx == doc.Config.LineCount-1 {
-						pdf.SetFont("Arial", "I", 12)
+						pdf.SetFont("DejaVu", "I", 12)
 					} else {
-						pdf.SetFont("Arial", "", 12)
+						pdf.SetFont("DejaVu", "", 12)
 					}
 
 					pdf.CellFormat(colWidths[i], lineHeight, text, "", 0, "L", false, 0, "")
